@@ -3,4 +3,12 @@ development:
     default:
       database: mindsweeper
       hosts: 
-      - ds031407.mongolab.com:31407/heroku_app9158359
+      - localhost
+
+production:
+  sessions:
+    default:
+      uri: <%= ENV['MONGOLAB_URI'] %>
+      options:
+        skip_version_check: true
+        safe: true
