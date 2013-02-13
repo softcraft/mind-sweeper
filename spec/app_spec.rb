@@ -7,48 +7,48 @@ describe 'mind sweeper' do
     Sinatra::Application
   end
 
-  let(:thing)            { double('thing') }
-  let(:options)          { { description: 'a thing in my mind' } }
+  let(:idea)            { double('idea') }
+  let(:options)          { { description: 'a idea in my mind' } }
   let(:expected_options) { options.merge({reviewed: false}) } 
 
-  it 'takes a thing out of my head into the system' do
-    Thing.should_receive(:create!).with(expected_options)
+  it 'takes a idea out of my head into the system' do
+    Idea.should_receive(:create!).with(expected_options)
     
-    post '/things', options 
+    post '/ideas', options 
     
     last_response.status.should == 201
   end
   
-  it 'shows first thing collected' do
-   Thing.stub(:where).and_return(['thing', 'other_thing'])
+  it 'shows first idea collected' do
+   Idea.stub(:where).and_return(['idea', 'other_idea'])
 
    get '/review'
    
-   last_response.body.should == 'thing'.to_json
+   last_response.body.should == 'idea'.to_json
   end
 
-  it 'sweeps a collected thing' do
-    Thing.stub(:find).with('id').and_return(thing)
-    thing.should_receive(:reviewed=).with(true)
-    thing.should_receive(:save).and_return(true)
+  it 'sweeps a collected idea' do
+    Idea.stub(:find).with('id').and_return(idea)
+    idea.should_receive(:reviewed=).with(true)
+    idea.should_receive(:save).and_return(true)
 
-    post '/things/id/sweep'
+    post '/ideas/id/sweep'
 
     last_response.status.should == 204
   end
   
-  it 'fails when trying to sweeps something wrongly' do
-    Thing.stub(:find).with('id').and_return(thing)
-    thing.stub(:reviewed=).with(true)
-    thing.stub(:save).and_return(false)
+  it 'fails when trying to sweeps someidea wrongly' do
+    Idea.stub(:find).with('id').and_return(idea)
+    idea.stub(:reviewed=).with(true)
+    idea.stub(:save).and_return(false)
 
-    post '/things/id/sweep'
+    post '/ideas/id/sweep'
 
     last_response.status.should == 422
   end
 
-  it 'shows nothing if no items to review' do
-    Thing.stub(:where).and_return([nil])
+  it 'shows noidea if no items to review' do
+    Idea.stub(:where).and_return([nil])
     
     get '/review'
     
@@ -56,18 +56,18 @@ describe 'mind sweeper' do
   end
 
   context 'integration', type: 'integration' do
-    it 'tests everything is working as expected' do
+    it 'tests everyidea is working as expected' do
       get '/review'
       last_response.status.should == 404
 
-      post '/things', options 
+      post '/ideas', options 
       last_response.status.should == 201
 
       get '/review'
       body = JSON.parse(last_response.body)
 
       id   = body['_id']
-      post "/things/#{id}/sweep"
+      post "/ideas/#{id}/sweep"
       last_response.status.should == 204
 
       get '/review'

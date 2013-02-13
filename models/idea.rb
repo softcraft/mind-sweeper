@@ -1,4 +1,4 @@
-class Thing
+class Idea
   include Mongoid::Document
 
   field :description

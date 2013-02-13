@@ -1,7 +1,7 @@
 mind-sweeper
 ==============
 
-### Get things out of your head (the first step in GTD process)
+### Get ideas out of your head (the first step in GTD process)
 
 This is a simple service that allows you to:
 
