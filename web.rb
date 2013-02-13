@@ -1,5 +1,5 @@
 require 'sinatra'
 
 get '/' do
-  "contacts is live"
+  "mindcollector is live"
 end
