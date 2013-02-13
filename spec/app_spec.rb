@@ -55,5 +55,25 @@ describe 'mind sweeper' do
     last_response.status.should == 404
   end
 
+  context 'integration', type: 'integration' do
+    it 'tests everything is working as expected' do
+      get '/review'
+      last_response.status.should == 404
+
+      post '/things', options 
+      last_response.status.should == 201
+
+      get '/review'
+      body = JSON.parse(last_response.body)
+
+      id   = body['_id']
+      post "/things/#{id}/sweep"
+      last_response.status.should == 204
+
+      get '/review'
+      last_response.status.should == 404
+    end
+  end
+
 end
 

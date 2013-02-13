@@ -1,7 +1,14 @@
 development:
   sessions:
     default:
-      database: mindsweeper
+      database: mindsweeper_test
+      hosts: 
+      - localhost
+
+development:
+  sessions:
+    default:
+      database: mindsweeper_dev
       hosts: 
       - localhost
 
