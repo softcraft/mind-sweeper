@@ -3,11 +3,4 @@ development:
     default:
       database: mindsweeper
       hosts: 
-      - localhost
-
-production:
-  sessions:
-    default:
-      database: mindsweeper
-      hosts: 
       - ds031407.mongolab.com:31407/heroku_app9158359
