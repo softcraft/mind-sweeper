@@ -13,7 +13,7 @@ This is a simple service that allows you to:
 
 # Documentation
 
-(Diagram here)
+![Diagram](http://i.imgur.com/s0vFdBU.png)
 
 ## Collect
 
