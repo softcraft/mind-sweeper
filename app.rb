@@ -6,15 +6,18 @@ require_relative 'models/idea'
 
 Mongoid.load!("config/mongoid.yml")
 
+configure do
+  enable :cross_origin
+  set :allow_origin, :any
+end
+
 get '/review' do
-  cross_origin 
   idea = Idea.where(reviewed: false).first
 
   idea ? idea.to_json : 404
 end
 
 post '/ideas' do
-  cross_origin
   options = { description: params[:description], reviewed: false }
   idea   = Idea.create!(options)
 
@@ -22,7 +25,6 @@ post '/ideas' do
 end
 
 post '/ideas/sweep' do
-  cross_origin
   idea = Idea.find(params[:id])
   idea.reviewed = true
   idea.save ? 204 : 422
