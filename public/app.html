@@ -40,10 +40,10 @@
                 dataType: 'text',
                 success: function(data) {
                     var text = data.split(",")[1].split(":")[1];
-                    if(text==""){
-                      text="No hay ideas";
-                    } 
                     $("#idea").html(text);
+                  },
+                error: function() {
+                  $("#idea").html("No hay ideas");
                 }
             })
         }
@@ -113,7 +113,6 @@
           <div data-role="fieldcontain" id="revisar_field">
               <fieldset data-role="controlgroup">
                   <label id="idea">
-                      No hay ideas
                   </label>
               </fieldset>
           </div>
