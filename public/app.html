@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>MindSweeper</title>
+  <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <link rel="stylesheet" href="my.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <script src="my.js"></script>
+
+  <!-- User-generated css -->
+  <style>
+    
+  </style>
+
+  <!-- User-generated js -->
+  <script>
+
+    $(function() {
+        function pageScript(func) {
+            var $context = $("div:jqmData(role='page'):last");
+            func($context);
+        }
+        
+        function getIdea() {
+            $.ajax({
+                url: "http://mindsweeper.herokuapp.com/review",
+                dataType: 'text',
+                success: function(data) {
+                    var id = data.split(",")[0].split(":")[1];
+                    var description = data.split(",")[1].split(":")[1];
+                    $("#algo").html(description);
+                    $("#id").html(id);
+                }
+            })
+        }
+        
+        pageScript(function($context){
+            getIdea();
+            
+            $("#ok").click(function() {
+                getIdea();
+            });
+            
+            $("#bcapturar").click(function() {
+                $("#description_text").val("");
+            });
+        });
+    });
+
+  </script>
+</head>
+<body>
+  <!-- Captura -->
+  <div data-role="page" id="page1">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Capturar
+          </h3>
+      </div>
+      <div data-role="content">
+          <form action="http://mindsweeper.herokuapp.com/ideas" method="POST">
+              <div data-role="fieldcontain" id="description_text">
+                  <fieldset data-role="controlgroup">
+                      <label for="description_text">
+                      </label>
+                      <input name="description" id="description_text" placeholder="" value=""
+                      type="text">
+                  </fieldset>
+              </div>
+              <input id="bcapturar" type="submit" data-icon="plus" data-iconpos="top"
+              value="Capturar">
+          </form>
+      </div>
+      <div data-role="tabbar" data-iconpos="top" data-theme="a">
+          <ul>
+              <li>
+                  <a href="#page1" data-transition="fade" data-theme="" data-icon="plus">
+                      Capturar
+                  </a>
+              </li>
+              <li>
+                  <a href="#page4" data-transition="fade" data-theme="" data-icon="check">
+                      Revisar
+                  </a>
+              </li>
+          </ul>
+      </div>
+  </div>
+  <!-- Revisa -->
+  <div data-role="page" id="page4">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Revisar
+          </h3>
+      </div>
+      <div data-role="content">
+          <div data-role="fieldcontain" id="algo">
+              <fieldset data-role="controlgroup">
+                  <label for="algo">
+                      Title
+                  </label>
+                  <textarea name="" id="algo" placeholder=""></textarea>
+              </fieldset>
+          </div>
+          <form action="http://mindsweeper.herokuapp.com/ideas/sweep" method="POST">
+              <input id="ok" type="submit" value="OK">
+              <div data-role="fieldcontain" id="id">
+                  <fieldset data-role="controlgroup">
+                      <label for="id">
+                      </label>
+                      <input name="" id="id" placeholder="" value="" type="text">
+                  </fieldset>
+              </div>
+          </form>
+      </div>
+      <div data-role="tabbar" data-iconpos="top" data-theme="a">
+          <ul>
+              <li>
+                  <a href="#page1" data-transition="fade" data-theme="" data-icon="plus">
+                      Capturar
+                  </a>
+              </li>
+              <li>
+                  <a href="#page4" data-transition="fade" data-theme="" data-icon="check">
+                      Revisar
+                  </a>
+              </li>
+          </ul>
+      </div>
+  </div>
+
+  
+</body>
+</html>

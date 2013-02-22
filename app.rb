@@ -1,31 +1,25 @@
 require 'sinatra'
 require 'mongoid'
-require 'sinatra/cross_origin'
 
 require_relative 'models/idea'
 
 Mongoid.load!("config/mongoid.yml")
 
-configure do
-  enable :cross_origin
-  set :allow_origin, :any
-end
-
 get '/review' do
   idea = Idea.where(reviewed: false).first
 
-  idea ? idea.to_json : 404
+  idea ? redirect '/app.html' : 404
 end
 
 post '/ideas' do
   options = { description: params[:description], reviewed: false }
   idea   = Idea.create!(options)
 
-  201
+  redirect '/app.html'
 end
 
 post '/ideas/sweep' do
   idea = Idea.find(params[:id])
   idea.reviewed = true
-  idea.save ? 204 : 422
+  idea.save ? redirect '/app.html' : 422
 end
