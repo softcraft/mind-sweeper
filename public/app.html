@@ -40,6 +40,9 @@
                 dataType: 'text',
                 success: function(data) {
                     var text = data.split(",")[1].split(":")[1];
+                    if(text==""){
+                      text="No hay ideas";
+                    } 
                     $("#idea").html(text);
                 }
             })
