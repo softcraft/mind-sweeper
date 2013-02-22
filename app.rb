@@ -1,15 +1,9 @@
 require 'sinatra'
 require 'mongoid'
-require 'sinatra/cross_origin'
 
 require_relative 'models/idea'
 
 Mongoid.load!("config/mongoid.yml")
-
-configure do
-  enable :cross_origin
-  set :allow_origin, :any
-end
 
 get '/review' do
   idea = Idea.where(reviewed: false).first
