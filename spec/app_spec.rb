@@ -28,21 +28,21 @@ describe 'mind sweeper' do
   end
 
   it 'sweeps a collected idea' do
-    Idea.stub(:find).with('id').and_return(idea)
+    Idea.stub(:where).and_return([idea])
     idea.should_receive(:reviewed=).with(true)
     idea.should_receive(:save).and_return(true)
 
-    post '/ideas/id/sweep'
+    post '/ideas/sweep'
 
     last_response.status.should == 204
   end
   
   it 'fails when trying to sweeps someidea wrongly' do
-    Idea.stub(:find).with('id').and_return(idea)
+    Idea.stub(:where).and_return([idea])
     idea.stub(:reviewed=).with(true)
     idea.stub(:save).and_return(false)
 
-    post '/ideas/id/sweep'
+    post '/ideas/sweep'
 
     last_response.status.should == 422
   end
@@ -66,8 +66,7 @@ describe 'mind sweeper' do
       get '/review'
       body = JSON.parse(last_response.body)
 
-      id   = body['_id']
-      post "/ideas/#{id}/sweep"
+      post "/ideas/sweep"
       last_response.status.should == 204
 
       get '/review'

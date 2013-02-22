@@ -25,7 +25,7 @@ post '/ideas' do
 end
 
 post '/ideas/sweep' do
-  idea = Idea.find(params[:id])
+  idea = Idea.where(reviewed: false).first
   idea.reviewed = true
   idea.save ? 204 : 422
 end
