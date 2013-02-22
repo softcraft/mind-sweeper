@@ -1,10 +1,13 @@
 require 'sinatra'
 require 'mongoid'
+require 'sinatra/cross_origin'
+
 require_relative 'models/idea'
 
 Mongoid.load!("config/mongoid.yml")
 
 get '/review' do
+  cross_origin 
   idea = Idea.where(reviewed: false).first
 
   idea ? idea.to_json : 404
