@@ -20,7 +20,7 @@ post '/ideas' do
   201
 end
 
-post '/ideas/:id/sweep' do
+post '/ideas/sweep' do
   idea = Idea.find(params[:id])
   idea.reviewed = true
   idea.save ? 204 : 422
