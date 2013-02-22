@@ -8,14 +8,14 @@ Mongoid.load!("config/mongoid.yml")
 get '/review' do
   idea = Idea.where(reviewed: false).first
 
-  idea ? 201 : 404
+  idea ? idea.to_json : 404
 end
 
 post '/ideas' do
   options = { description: params[:description], reviewed: false }
   idea   = Idea.create!(options)
 
-  idea.to_json
+  201
 end
 
 post '/ideas/sweep' do
