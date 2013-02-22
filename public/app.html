@@ -31,7 +31,9 @@
         }
 
         function deleteIdea() {
-          $.post("http://mindsweeper.herokuapp.com/ideas/sweep")
+          $.post("http://mindsweeper.herokuapp.com/ideas/sweep", function() {
+              getIdea();
+            });
         }
 
         function getIdea() {
@@ -53,7 +55,6 @@
             
             $("#ok").click(function() {
                 deleteIdea();
-                getIdea();
             });
             
             $("#bcapturar").click(function() {
