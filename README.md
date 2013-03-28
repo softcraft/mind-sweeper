@@ -13,7 +13,26 @@ This is a simple service that allows you to:
 
 # Documentation
 
-![Diagram](http://i.imgur.com/s0vFdBU.png)
+![Diagram](http://i.imgur.com/tNWlTMA.png)
+
+## Signup
+
+Create a new user
+
+### Request
+
+* Method: POST
+* Required properties: username, password
+
+### Responses
+
+#### Created
+
+* Status: 201
+
+#### Bad parameters
+
+* Status: 422
 
 ## Collect
 
@@ -23,6 +42,7 @@ Save an idea
 
 * Method: POST
 * Required properties: description
+* Optional properties: related_users
 
 ### Responses
 
@@ -36,7 +56,7 @@ Save an idea
 
 ## Review
 
-Review saved ideas
+Review next idea, ordered by creation date and then reviewed date
 
 ### Request
 
@@ -47,7 +67,7 @@ Review saved ideas
 #### OK
 
 * Status: 200
-* Embedded: ideas
+* Embedded: next_idea
 
 ## Idea
 
@@ -64,15 +84,34 @@ Idea resource details
 
 * Status: 200
 * Properties: id, description
-* Links: sweep
+* Links: delete, review
 
-## Sweep
+## Review
 
 Mark an idea as reviewed
 
 ### Request
 
 * Method: POST
+* Required properties: id
+
+### Responses
+
+#### Updated
+
+* Status: 204
+
+#### Bad parameters
+
+* Status: 422
+
+## Delete
+
+Kill an idea
+
+### Request
+
+* Method: DELETE
 * Required properties: id
 
 ### Responses
