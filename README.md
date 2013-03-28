@@ -9,11 +9,13 @@ This is a simple service that allows you to:
 
 * Create a new idea
 * Review your ideas (one by one)
-* Sweep or mark as reviewed an idea
+* Delete or mark as reviewed an idea
 
 # Documentation
 
-![Diagram](http://i.imgur.com/tNWlTMA.png)
+![Diagram](http://i.imgur.com/cyWTuXA.png)
+
+![Diagram](http://i.imgur.com/TqohrO0.png)
 
 ## Signup
 
@@ -54,7 +56,7 @@ Save an idea
 
 * Status: 422
 
-## Review
+## Decide
 
 Review next idea, ordered by creation date and then reviewed date
 
