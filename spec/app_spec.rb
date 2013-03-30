@@ -99,6 +99,7 @@ describe 'mind sweeper' do
     let(:signup)   { root.links[:signup].href }
     let(:login)    { root.links[:login].href }
     let(:collect)  { user.links[:collect].href }
+    let(:next_idea){ user.next_idea }
 
     before do
       get '/'
@@ -115,8 +116,10 @@ describe 'mind sweeper' do
       post login, params
       login_response = JSON.parse(last_response.body).to_json
       user.from_json(login_response)
+      
       post collect, { description: 'new idea' }
-      last_response.status.should == 201
+      pending('next line should work')
+      next_idea.links.should == ''
     end
   end
 

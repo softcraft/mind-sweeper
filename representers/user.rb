@@ -6,14 +6,18 @@ module Representers
     include Roar::Representer::JSON
     include Roar::Representer::JSON::HAL
 
-    property :next_idea, :embedded => true
-
     link :self do
       "#{settings.host}#{user_path}"
     end
 
     link :collect do
       "#{settings.host}#{collect_path}"
+    end
+    
+    property :next_idea, embedded: true
+
+    def next_idea
+      ideas.last.extend(Representers::Idea)
     end
 
     def user_path

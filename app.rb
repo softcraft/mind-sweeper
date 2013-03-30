@@ -5,6 +5,7 @@ require 'mongoid'
 require_relative 'models/idea'
 require_relative 'models/user'
 require_relative 'representers/root'
+require_relative 'representers/idea'
 require_relative 'representers/user'
 
 config_file 'config/config.yml'
