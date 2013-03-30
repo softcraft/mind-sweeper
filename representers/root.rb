@@ -11,7 +11,7 @@ module Representers
     end
 
     link :signup do
-      ''
+      "#{settings.host}#{settings.signup_path}"
     end
 
     link :collect do

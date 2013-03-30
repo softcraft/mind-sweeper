@@ -12,3 +12,9 @@ Mongoid.load!("config/mongoid.yml")
 get '/' do
   Object.new.extend(Representers::Root).to_json
 end
+
+post settings.signup_path do
+  user = User.create(params)
+  
+  user.save ? 201 : 422
+end
