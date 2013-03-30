@@ -11,6 +11,13 @@ describe 'mind sweeper' do
     get '/'
     
     last_response.status.should == 200
+  context 'root' do
+    before { get '/' }
+
+    it 'responds correctly' do
+      last_response.status.should == 200
+    end
+  end
   end
 
   context 'integration', type: 'integration' do

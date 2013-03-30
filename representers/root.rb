@@ -7,7 +7,7 @@ module Representers
     include Roar::Representer::JSON::HAL
 
     link :self do
-      'http://localhost:9292/'
+      "#{settings.host}/"
     end
 
     link :signup do
