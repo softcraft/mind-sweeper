@@ -1,0 +1,6 @@
+host:
+  development: http://localhost:9292
+  test:
+  production: http://mindsweeper.herokuapp.com
+
+signup_path: /users
