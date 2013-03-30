@@ -7,6 +7,6 @@ describe Representers::Root do
 
   it 'renders correctly' do
     subject.links['self'].href.should == '/'
-    subject.links.keys.should == %w{self signup collect decide}
+    subject.links.keys.should == %w{self signup login}
   end
 end

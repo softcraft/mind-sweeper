@@ -14,12 +14,8 @@ module Representers
       "#{settings.host}#{settings.signup_path}"
     end
 
-    link :collect do
-      ''
-    end
-
-    link :decide do
-      ''
+    link :login do
+      "#{settings.host}#{settings.login_path}"
     end
 
   end
