@@ -5,6 +5,7 @@ require 'mongoid'
 require_relative 'models/idea'
 require_relative 'models/user'
 require_relative 'representers/root'
+require_relative 'representers/user'
 
 config_file 'config/config.yml'
 Mongoid.load!("config/mongoid.yml")
@@ -15,6 +16,12 @@ end
 
 post settings.signup_path do
   user = User.create(params)
-  
+
   user.save ? 201 : 422
+end
+
+post settings.login_path do
+  user = User.where(params).first
+
+  user ? user.extend(Representers::User).to_json : 422
 end

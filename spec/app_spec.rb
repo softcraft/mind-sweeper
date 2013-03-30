@@ -7,6 +7,8 @@ describe 'mind sweeper' do
     Sinatra::Application
   end
 
+  let(:params) { {username: 'username', password: 'password'} }
+
   context 'root' do
     before { get '/' }
 
@@ -17,11 +19,10 @@ describe 'mind sweeper' do
 
   context 'signup' do
 
-    let(:params) { {username: 'username', password: 'password'} }
     let(:user)   { double('user') }
 
     before do
-      User.should_receive(:create).with(params.stringify_keys!).
+      User.should_receive(:create).with(params.stringify_keys).
         and_return(user)
     end
 
@@ -42,15 +43,37 @@ describe 'mind sweeper' do
 
   end
 
+  context 'login' do
+
+    let(:user)       { User.new }
+    let(:login_path) { settings.login_path.gsub(':user', 'username') }
+
+    before do
+      User.stub(:where).with(params.stringify_keys).and_return([user])
+    end
+
+    subject do
+      post login_path, params
+      last_response.status
+    end
+
+    it 'responds succesfully' do
+      user.stub(:save).and_return(true)
+      subject.should == 200
+    end
+
+  end
+
   context 'integration', type: 'integration' do
     let(:root)     { Object.new.extend(Representers::Root) }
+    let(:user)     { User.last.extend(Representers::User) }
     let(:signup)   { root.links[:signup].href }
-    let(:params) { {username: 'username', password: 'password'} }
+    let(:login)    { root.links[:login].href }
 
     before do
       get '/'
-      response = JSON.parse(last_response.body).to_json
-      root.from_json(response)
+      root_response = JSON.parse(last_response.body).to_json
+      root.from_json(root_response)
     end
 
     after do
@@ -59,7 +82,9 @@ describe 'mind sweeper' do
 
     it 'tests everything is working as expected' do
       post signup, params
-      last_response.status.should == 201
+      post login, params
+      login_response = JSON.parse(last_response.body).to_json
+      user.from_json(login_response)
     end
   end
 
