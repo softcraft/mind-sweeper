@@ -4,6 +4,8 @@ class Idea
 
   field :description
 
+  belongs_to :user
+
   def to_s
     "#{description} | id: #{id}"
   end
