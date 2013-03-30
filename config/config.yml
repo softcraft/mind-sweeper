@@ -3,6 +3,7 @@ host:
   test:
   production: http://mindsweeper.herokuapp.com
 
-signup_path: /users
-login_path:  /login
-user_path:   /users/:user
+signup_path:  /users
+login_path:   /login
+user_path:    /users/:user
+collect_path: /:user/ideas

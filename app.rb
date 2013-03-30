@@ -25,3 +25,10 @@ post settings.login_path do
 
   user ? user.extend(Representers::User).to_json : 422
 end
+
+post settings.collect_path do
+  idea = Idea.create(description: params[:description],
+                     user_id: params[:user])
+
+  idea.save ? 201 : 422
+end

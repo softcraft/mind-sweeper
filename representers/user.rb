@@ -13,11 +13,15 @@ module Representers
     end
 
     link :collect do
-      "tbd"
+      "#{settings.host}#{collect_path}"
     end
 
     def user_path
       settings.user_path.gsub(':user', id)
+    end
+
+    def collect_path
+      settings.collect_path.gsub(':user', id)
     end
   end
 end

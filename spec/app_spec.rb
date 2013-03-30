@@ -64,11 +64,41 @@ describe 'mind sweeper' do
     end
   end
 
+  context 'collect' do
+
+    let(:user)   { double('user') }
+    let(:idea)   { double('idea') }
+    let(:params) { { description: 'new idea' } }
+    let(:options) { params.merge(user_id: ':user') }
+
+    before do
+      Idea.should_receive(:create).with(options).
+        and_return(idea)
+    end
+
+    subject do
+      post settings.collect_path, params
+      last_response.status
+    end
+
+    it 'creates a user idea' do
+      idea.stub(:save).and_return(true)
+      subject.should == 201
+    end
+
+    it 'returns error if error creating idea' do
+      idea.stub(:save).and_return(false)
+      subject.should == 422
+    end
+
+  end
+
   context 'integration', type: 'integration' do
     let(:root)     { Object.new.extend(Representers::Root) }
     let(:user)     { User.last.extend(Representers::User) }
     let(:signup)   { root.links[:signup].href }
     let(:login)    { root.links[:login].href }
+    let(:collect)  { user.links[:collect].href }
 
     before do
       get '/'
@@ -85,6 +115,8 @@ describe 'mind sweeper' do
       post login, params
       login_response = JSON.parse(last_response.body).to_json
       user.from_json(login_response)
+      post collect, { description: 'new idea' }
+      last_response.status.should == 201
     end
   end
 
