@@ -48,20 +48,20 @@ describe 'mind sweeper' do
     let(:user)       { User.new }
     let(:login_path) { settings.login_path.gsub(':user', 'username') }
 
-    before do
-      User.stub(:where).with(params.stringify_keys).and_return([user])
-    end
-
     subject do
       post login_path, params
       last_response.status
     end
 
     it 'responds succesfully' do
-      user.stub(:save).and_return(true)
+      User.stub(:where).with(params.stringify_keys).and_return([user])
       subject.should == 200
     end
 
+    it 'rejects wrong credentials' do
+      User.stub(:where).and_return([])
+      subject.should == 422
+    end
   end
 
   context 'integration', type: 'integration' do
