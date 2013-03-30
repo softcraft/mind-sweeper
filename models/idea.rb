@@ -1,14 +1,10 @@
 class Idea
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   field :description
-  field :reviewed
-
-  def reviewed?
-    reviewed == true
-  end
 
   def to_s
-    "#{description} | r?: #{reviewed?}, id: #{id}"
+    "#{description} | id: #{id}"
   end
 end
