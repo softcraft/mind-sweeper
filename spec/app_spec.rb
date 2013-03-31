@@ -7,70 +7,166 @@ describe 'mind sweeper' do
     Sinatra::Application
   end
 
-  let(:idea)            { double('idea') }
-  let(:options)          { { description: 'a idea in my mind' } }
-  let(:expected_options) { options.merge({reviewed: false}) } 
+  let(:params) { {username: 'username', password: 'password'} }
 
-  it 'takes a idea out of my head into the system' do
-    Idea.should_receive(:create!).with(expected_options)
-    
-    post '/ideas', options 
-    
-    last_response.status.should == 201
-  end
-  
-  it 'shows first idea collected' do
-   Idea.stub(:where).and_return(['idea', 'other_idea'])
+  context 'root' do
+    before { get '/' }
 
-   get '/review'
-   
-   last_response.body.should == 'idea'.to_json
+    it 'responds correctly' do
+      last_response.status.should == 200
+    end
   end
 
-  it 'sweeps a collected idea' do
-    Idea.stub(:where).and_return([idea])
-    idea.should_receive(:reviewed=).with(true)
-    idea.should_receive(:save).and_return(true)
+  context 'signup' do
 
-    post '/ideas/sweep'
+    let(:user)   { double('user') }
 
-    last_response.status.should == 204
+    before do
+      User.should_receive(:create).with(params.stringify_keys).
+        and_return(user)
+    end
+
+    subject do
+      post settings.signup_path, params
+      last_response.status
+    end
+
+    it 'creates a user' do
+      user.stub(:save).and_return(true)
+      subject.should == 201
+    end
+
+    it 'returns error if error creating user' do
+      user.stub(:save).and_return(false)
+      subject.should == 422
+    end
+
   end
-  
-  it 'fails when trying to sweeps someidea wrongly' do
-    Idea.stub(:where).and_return([idea])
-    idea.stub(:reviewed=).with(true)
-    idea.stub(:save).and_return(false)
 
-    post '/ideas/sweep'
+  context 'login' do
 
-    last_response.status.should == 422
+    let(:user)       { User.new }
+    let(:login_path) { settings.login_path.gsub(':user', 'username') }
+
+    subject do
+      post login_path, params
+      last_response.status
+    end
+
+    it 'responds succesfully' do
+      User.stub(:where).with(params.stringify_keys).and_return([user])
+      subject.should == 200
+    end
+
+    it 'rejects wrong credentials' do
+      User.stub(:where).and_return([])
+      subject.should == 422
+    end
   end
 
-  it 'shows noidea if no items to review' do
-    Idea.stub(:where).and_return([nil])
-    
-    get '/review'
-    
-    last_response.status.should == 404
+  context 'collect' do
+
+    let(:user)   { double('user') }
+    let(:idea)   { double('idea') }
+    let(:params) { { description: 'new idea' } }
+    let(:options) { params.merge(user_id: ':user') }
+
+    before do
+      Idea.should_receive(:create).with(options).
+        and_return(idea)
+    end
+
+    subject do
+      post settings.collect_path, params
+      last_response.status
+    end
+
+    it 'creates a user idea' do
+      idea.stub(:save).and_return(true)
+      subject.should == 201
+    end
+
+    it 'returns error if error creating idea' do
+      idea.stub(:save).and_return(false)
+      subject.should == 422
+    end
+
+  end
+
+  context 'review' do
+
+    let(:idea)   { double('idea') }
+
+    before do
+      Idea.stub(:find).and_return(idea)
+    end
+
+    subject do
+      put settings.idea_path
+      last_response.status
+    end
+
+    it 'touches an idea' do
+      idea.should_receive(:touch)
+      subject.should == 204
+    end
+
+  end
+
+  context 'delete' do
+
+    let(:idea)   { double('idea') }
+
+    before do
+      Idea.stub(:find).and_return(idea)
+    end
+
+    subject do
+      delete settings.idea_path
+      last_response.status
+    end
+
+    it 'touches an idea' do
+      idea.should_receive(:delete)
+      subject.should == 204
+    end
+
   end
 
   context 'integration', type: 'integration' do
-    it 'tests everyidea is working as expected' do
-      get '/review'
-      last_response.status.should == 404
+    let(:root)     { Object.new.extend(Representers::Root) }
+    let(:user)     { User.last.extend(Representers::User) }
+    let(:signup)   { root.links[:signup].href }
+    let(:login)    { root.links[:login].href }
+    let(:collect)  { user.links[:collect].href }
+    let(:review_idea)   { idea.links[:review].href }
+    let(:delete_idea)   { idea.links[:delete].href }
+    let(:idea)     do
+      idea =  user.ideas.first.extend(Representers::Idea)
+      idea.to_json
+      idea
+    end 
 
-      post '/ideas', options 
-      last_response.status.should == 201
+    before do
+      get '/'
+      root_response = JSON.parse(last_response.body).to_json
+      root.from_json(root_response)
+    end
 
-      get '/review'
-      body = JSON.parse(last_response.body)
+    after do
+      User.last.delete
+    end
 
-      post "/ideas/sweep"
-      last_response.status.should == 204
-
-      get '/review'
-      last_response.status.should == 404
+    it 'tests everything is working as expected' do
+      post signup, params
+      post login, params
+      login_response = JSON.parse(last_response.body).to_json
+      user.from_json(login_response)
+      
+      post   collect, { description: 'new idea' }
+      put    review_idea
+      delete delete_idea 
+      user.ideas.should == []
     end
   end
 

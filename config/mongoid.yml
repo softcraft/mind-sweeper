@@ -5,7 +5,7 @@ development:
       hosts: 
       - localhost
 
-development:
+test:
   sessions:
     default:
       database: mindsweeper_dev
