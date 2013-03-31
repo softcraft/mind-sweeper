@@ -11,11 +11,11 @@ module Representers
     end
 
     link :delete do
-      "#{settings.host}#{idea_path}/delete"
+      "#{settings.host}#{idea_path}"
     end
 
     link :review do
-      "#{settings.host}#{idea_path}/review"
+      "#{settings.host}#{idea_path}"
     end
 
     def idea_path

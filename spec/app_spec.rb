@@ -93,13 +93,59 @@ describe 'mind sweeper' do
 
   end
 
+  context 'review' do
+
+    let(:idea)   { double('idea') }
+
+    before do
+      Idea.stub(:find).and_return(idea)
+    end
+
+    subject do
+      put settings.idea_path
+      last_response.status
+    end
+
+    it 'touches an idea' do
+      idea.should_receive(:touch)
+      subject.should == 204
+    end
+
+  end
+
+  context 'delete' do
+
+    let(:idea)   { double('idea') }
+
+    before do
+      Idea.stub(:find).and_return(idea)
+    end
+
+    subject do
+      delete settings.idea_path
+      last_response.status
+    end
+
+    it 'touches an idea' do
+      idea.should_receive(:delete)
+      subject.should == 204
+    end
+
+  end
+
   context 'integration', type: 'integration' do
     let(:root)     { Object.new.extend(Representers::Root) }
     let(:user)     { User.last.extend(Representers::User) }
     let(:signup)   { root.links[:signup].href }
     let(:login)    { root.links[:login].href }
     let(:collect)  { user.links[:collect].href }
-    let(:next_idea){ user.next_idea }
+    let(:review_idea)   { idea.links[:review].href }
+    let(:delete_idea)   { idea.links[:delete].href }
+    let(:idea)     do
+      idea =  user.ideas.first.extend(Representers::Idea)
+      idea.to_json
+      idea
+    end 
 
     before do
       get '/'
@@ -117,9 +163,10 @@ describe 'mind sweeper' do
       login_response = JSON.parse(last_response.body).to_json
       user.from_json(login_response)
       
-      post collect, { description: 'new idea' }
-      pending('next line should work')
-      next_idea.links.should == ''
+      post   collect, { description: 'new idea' }
+      put    review_idea
+      delete delete_idea 
+      user.ideas.should == []
     end
   end
 

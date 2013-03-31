@@ -33,3 +33,17 @@ post settings.collect_path do
 
   idea.save ? 201 : 422
 end
+
+put settings.idea_path do
+  idea = Idea.find(params[:idea])
+  idea.touch
+
+  204
+end
+
+delete settings.idea_path do
+  idea = Idea.find(params[:idea])
+  idea.delete
+
+  204
+end
