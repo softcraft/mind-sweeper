@@ -13,12 +13,13 @@ module Representers
     link :collect do
       "#{settings.host}#{collect_path}"
     end
-    
-    property :next_idea, embedded: true
 
-    def next_idea
-      ideas.last.extend(Representers::Idea)
-    end
+    collection :ideas, {
+      from: 'ideas',
+      class: Idea,
+      extend: Representers::Idea,
+      embedded: true
+    }  
 
     def user_path
       settings.user_path.gsub(':user', id)
@@ -27,5 +28,5 @@ module Representers
     def collect_path
       settings.collect_path.gsub(':user', id)
     end
+      end
   end
-end
