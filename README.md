@@ -13,6 +13,8 @@ This is a simple service that allows you to:
 
 # Documentation
 
+TODO: this need to be updated (login and signup in root)
+
 ![Diagram](http://i.imgur.com/cyWTuXA.png)
 
 ![Diagram](http://i.imgur.com/TqohrO0.png)
