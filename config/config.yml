@@ -5,5 +5,5 @@ host:
 signup_path:  /api/users
 login_path:   /api/login
 user_path:    /api/users/:user
-collect_path: /api/:user/ideas
+collect_path: /api/users/:user/ideas
 idea_path:    /api/ideas/:idea
