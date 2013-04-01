@@ -1,6 +1,8 @@
 mind-sweeper
 ==============
 
+![Travis-ci](https://api.travis-ci.org/solojavier/mind-sweeper.png)
+
 Organize your ideas and take action
 
 # Description
