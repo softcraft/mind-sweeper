@@ -6,6 +6,8 @@ module Representers
     include Roar::Representer::JSON
     include Roar::Representer::JSON::HAL
 
+    property :description
+
     link :self do
       "#{settings.host}#{idea_path}"
     end

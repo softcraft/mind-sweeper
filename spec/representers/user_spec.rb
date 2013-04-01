@@ -8,7 +8,7 @@ describe Representers::User do
   before  { subject.to_json }
 
   it 'renders correctly' do
-    subject.links['self'].href.should == "/users/#{user.id}"
+    subject.links['self'].href.should == "/api/users/#{user.id}"
     subject.links.keys.should == %w{self collect}
   end
 end

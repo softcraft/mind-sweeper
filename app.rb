@@ -11,7 +11,7 @@ require_relative 'representers/user'
 config_file 'config/config.yml'
 Mongoid.load!("config/mongoid.yml")
 
-get '/' do
+get '/api' do
   Object.new.extend(Representers::Root).to_json
 end
 
@@ -46,4 +46,14 @@ delete settings.idea_path do
   idea.delete
 
   204
+end
+
+get settings.user_path do
+  user = User.find(params[:user])
+
+  user ? user.extend(Representers::User).to_json : 422
+end
+
+get '/' do
+  erb :index
 end

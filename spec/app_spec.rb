@@ -10,7 +10,7 @@ describe 'mind sweeper' do
   let(:params) { {username: 'username', password: 'password'} }
 
   context 'root' do
-    before { get '/' }
+    before { get '/api' }
 
     it 'responds correctly' do
       last_response.status.should == 200
@@ -46,7 +46,7 @@ describe 'mind sweeper' do
   context 'login' do
 
     let(:user)       { User.new }
-    let(:login_path) { settings.login_path.gsub(':user', 'username') }
+    let(:login_path) { settings.login_path }
 
     subject do
       post login_path, params
@@ -64,6 +64,26 @@ describe 'mind sweeper' do
     end
   end
 
+  context 'user' do
+
+    let(:user)       { User.new }
+    let(:user_path) { settings.user_path.gsub(':user', user.id) }
+
+    subject do
+      get user_path, params
+      last_response.status
+    end
+
+    it 'responds succesfully' do
+      User.stub(:find).and_return(user)
+      subject.should == 200
+    end
+
+    it 'rejects wrong user' do
+      User.stub(:find).and_return(nil)
+      subject.should == 422
+    end
+  end
   context 'collect' do
 
     let(:user)   { double('user') }
@@ -148,7 +168,7 @@ describe 'mind sweeper' do
     end 
 
     before do
-      get '/'
+      get '/api'
       root_response = JSON.parse(last_response.body).to_json
       root.from_json(root_response)
     end

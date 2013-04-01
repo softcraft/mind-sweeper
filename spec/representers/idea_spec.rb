@@ -8,7 +8,7 @@ describe Representers::Idea do
   before  { subject.to_json }
 
   it 'renders correctly' do
-    subject.links['self'].href.should == "/ideas/#{idea.id}"
+    subject.links['self'].href.should == "/api/ideas/#{idea.id}"
     subject.links.keys.should == %w{self delete review}
   end
 end
