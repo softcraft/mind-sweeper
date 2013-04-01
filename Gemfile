@@ -6,9 +6,9 @@ gem 'thin'
 gem 'mongoid'
 gem 'roar'
 gem 'sinatra-contrib'
-gem 'rake'
 
 group :test do
   gem 'rspec'
+  gem 'rake'
   gem 'rack-test'
 end
