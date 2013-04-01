@@ -1,7 +1,7 @@
 host:
   development: http://localhost:4567
   test:
-  production: http://mindsweeper.herokuapp.4567
+  production: http://mindsweeper.herokuapp.com
 signup_path:  /api/users
 login_path:   /api/login
 user_path:    /api/users/:user
