@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mochihua</title>
+    
+    <link rel="stylesheet" href="css/style.css" />
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans|Raleway:100' rel='stylesheet' type='text/css' />
+
+    <meta charset="utf-8" />
+  </head>
+  
+  <body>
+    <form action="api/5158bec53b77300134000001/ideas" id="new_idea"> 
+      <textarea cols="40" rows="2" placeholder="Collect an idea" name="post[description]" id="description" maxlength="140"></textarea>
+      <button id="collect">Collect</button>
+    </form>
+
+    <section id="ideas_">
+      <h1>Ideas</h1>
+      <ol id="ideas">
+      </ol>
+    </section>
+
+    <script id="idea" type="text/html">
+      <li class="idea">
+        <article> 
+          <div class="avatar" style="background-image: url('https://si0.twimg.com/profile_images/3372639288/76baac61e4a4f27096d2b79b1ccddbcd.png')"></div>
+          <div class="content_wrapper">
+            <div class="content">
+              {{description}}
+            </div>
+          </div>
+          <footer>
+           <button>Archive</button>
+           <button>Delete</button>
+          </footer>
+        </article>
+      </li>
+    </script>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//rawgithub.com/HenrikJoreteg/ICanHaz.js/master/ICanHaz.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+  </body>
+</html>
