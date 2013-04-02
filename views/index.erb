@@ -10,28 +10,29 @@
   </head>
   
   <body>
-
     <form action="api/login" id="login_form">
-      <label>
-        Username:
-        <input type="text" name="username" />
-      </label>
-
-      <label>
-        Password:
-        <input type="password" name="password" />
-      </label>
-
+      <section>
+        <label>
+          Username:
+          <input type="text" name="username" />
+        </label>
+      </section>
+      <section>
+        <label>
+          Password:
+          <input type="password" name="password" />
+        </label>
+      </section>
       <button id="login">Login</button>
     </form>
 
-    <form action="api/5158bec53b77300134000001/ideas" id="new_idea"> 
-      <textarea cols="40" rows="2" placeholder="Collect an idea" name="post[description]" id="description" maxlength="140"></textarea>
+    <form action="" id="new_idea"> 
+      <textarea cols="40" rows="2" name="post[description]" id="description" maxlength="140"></textarea>
       <button id="collect">Collect</button>
     </form>
 
     <section id="ideas_">
-      <h1>Ideas</h1>
+      <h1></h1>
       <ol id="ideas">
       </ol>
     </section>
@@ -39,15 +40,18 @@
     <script id="idea" type="text/html">
       <li class="idea">
         <article> 
-          <div class="avatar" style="background-image: url('https://si0.twimg.com/profile_images/3372639288/76baac61e4a4f27096d2b79b1ccddbcd.png')"></div>
           <div class="content_wrapper">
             <div class="content">
               {{description}}
             </div>
           </div>
           <footer>
-           <button>Archive</button>
-           <button>Delete</button>
+            <form action="{{_links.review.href}}" id="review">
+              <button>Review</button>
+            </form>
+           <form action="{{_links.delete.href}}" id="delete">
+             <button>Delete</button>
+           </form>
           </footer>
         </article>
       </li>
