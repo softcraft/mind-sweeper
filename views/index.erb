@@ -10,13 +10,29 @@
   </head>
   
   <body>
-    <form action="api/5158bec53b77300134000001/ideas" id="new_idea"> 
-      <textarea cols="40" rows="2" placeholder="Collect an idea" name="post[description]" id="description" maxlength="140"></textarea>
-      <button id="collect">Collect</button>
+    <form action="api/login" id="login_form">
+      <section>
+        <label>
+          Usuario:
+          <input type="text" name="username" />
+        </label>
+      </section>
+      <section>
+        <label>
+          Password:
+          <input type="password" name="password" />
+        </label>
+      </section>
+      <button id="login">Entrar</button>
+    </form>
+
+    <form action="" id="new_idea"> 
+      <textarea cols="40" rows="2" name="post[description]" id="description" maxlength="140"></textarea>
+      <button id="collect">Crear</button>
     </form>
 
     <section id="ideas_">
-      <h1>Ideas</h1>
+      <h1></h1>
       <ol id="ideas">
       </ol>
     </section>
@@ -24,15 +40,15 @@
     <script id="idea" type="text/html">
       <li class="idea">
         <article> 
-          <div class="avatar" style="background-image: url('https://si0.twimg.com/profile_images/3372639288/76baac61e4a4f27096d2b79b1ccddbcd.png')"></div>
           <div class="content_wrapper">
             <div class="content">
               {{description}}
             </div>
           </div>
           <footer>
-           <button>Archive</button>
-           <button>Delete</button>
+             <button id="complete" data-action="{{_links.delete.href}}">Completar</button>
+             <button id="review" data-action="{{_links.review.href}}">Despues</button>
+             <button id="delete" data-action="{{_links.delete.href}}">Borrar</button>
           </footer>
         </article>
       </li>
