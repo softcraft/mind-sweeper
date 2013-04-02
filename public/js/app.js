@@ -1,22 +1,17 @@
 var Ideas = function() {};
 
-Ideas.prototype.loadJSON = function(options) {
+Ideas.prototype.login = function(options) {
     var that = this;
     
     $.ajax({
-        url: '/api/users/5158bec53b77300134000001',
-        type: 'GET',
+        url: options.url,
+        type: 'POST',
         timeout: 5000,
         tries: 0,
         retryLimit: 3,
-        beforeSend: function() {
-                $('#ideas').find('li').remove();
-                $('#ideas').show();
-                $('#ideas').addClass('loading');
-        },
-        success: function(data) {
-            that.parseIdeas(data, options);
-        },
+        dataType: 'json',
+        data: options.data,
+        success: options.succes,
 
         error: function(XMLHttpRequest) {
             this.tries++;
@@ -28,7 +23,6 @@ Ideas.prototype.loadJSON = function(options) {
             }
         }
     });
-
 };
 
 Ideas.prototype.parseIdeas = function(data, options) {
@@ -69,11 +63,33 @@ Ideas.prototype.post = function(options) {
     });
 };
 
- var IdeasView = function(options) {
+var IdeasView = function(options) {
     this.ideas = options.ideas;
-    this.ideas.loadJSON(this);
     var post = $.proxy(this.postStatus, this);
+    var login = $.proxy(this.loginStatus, this);
+
     $('#new_idea').submit(post);
+    $('#login_form').submit(login);
+};
+
+IdeasView.prototype.loginStatus = function(e) {
+    e.preventDefault();
+    var that = this;
+    this.ideas.login({
+        url: $('#login_form').attr('action'),
+        data: {
+            username: $('[name=username]').val(),
+            password: $('[name=password]').val()
+        },
+        succes: function(data) {/*
+            $('#login_form').fadeOut(function() {
+                $('#new_idea').fadeIn();
+                $('#ideas_').fadeIn(function() {
+                    that.parseIdeas(data, options);
+                });
+            });*/
+        }
+    });
 };
 
 IdeasView.prototype.postStatus = function(e) {

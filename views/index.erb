@@ -10,6 +10,21 @@
   </head>
   
   <body>
+
+    <form action="api/login" id="login_form">
+      <label>
+        Username:
+        <input type="text" name="username" />
+      </label>
+
+      <label>
+        Password:
+        <input type="password" name="password" />
+      </label>
+
+      <button id="login">Login</button>
+    </form>
+
     <form action="api/5158bec53b77300134000001/ideas" id="new_idea"> 
       <textarea cols="40" rows="2" placeholder="Collect an idea" name="post[description]" id="description" maxlength="140"></textarea>
       <button id="collect">Collect</button>
