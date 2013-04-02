@@ -28,7 +28,7 @@ Ideas.prototype.loadJSON = function(options) {
   var that = this;
 
   $.ajax({
-        url: '/api/users/5158bec53b77300134000001',
+        url: $('.reload').attr('href'),
         type: 'GET',
         timeout: 5000,
         dataType: 'json',
@@ -157,6 +157,7 @@ IdeasView.prototype.loginStatus = function(e) {
         success: function(data, options) {
             Ideas.prototype.parseIdeas(data, options);
             $('#new_idea').get(0).setAttribute('action', data._links.collect.href);
+            $('.reload').attr('href', data._links.self.href);
             $('#login_form').fadeOut(function(data, options) {
                 $('#new_idea').fadeIn();
                 $('#ideas_').fadeIn(function(data, options) {
