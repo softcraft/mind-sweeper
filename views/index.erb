@@ -13,7 +13,7 @@
     <form action="api/login" id="login_form">
       <section>
         <label>
-          Username:
+          Usuario:
           <input type="text" name="username" />
         </label>
       </section>
@@ -23,12 +23,12 @@
           <input type="password" name="password" />
         </label>
       </section>
-      <button id="login">Login</button>
+      <button id="login">Entrar</button>
     </form>
 
     <form action="" id="new_idea"> 
       <textarea cols="40" rows="2" name="post[description]" id="description" maxlength="140"></textarea>
-      <button id="collect">Collect</button>
+      <button id="collect">Crear</button>
     </form>
 
     <section id="ideas_">
@@ -46,12 +46,9 @@
             </div>
           </div>
           <footer>
-            <form action="{{_links.review.href}}" id="review">
-              <button>Review</button>
-            </form>
-           <form action="{{_links.delete.href}}" id="delete">
-             <button>Delete</button>
-           </form>
+             <button id="complete" data-action="{{_links.delete.href}}">Completar</button>
+             <button id="review" data-action="{{_links.review.href}}">Despues</button>
+             <button id="delete" data-action="{{_links.delete.href}}">Borrar</button>
           </footer>
         </article>
       </li>

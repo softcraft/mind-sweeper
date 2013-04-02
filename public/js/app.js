@@ -75,19 +75,61 @@ Ideas.prototype.post = function(options) {
     });
 };
 
+Ideas.prototype.delete = function(options) {
+    $.ajax({
+        url: options.url,
+        type: 'DELETE',
+        timeout: 5000,
+        tries: 0,
+        retryLimit: 3,
+        success: options.success,
+        error: function(XMLHttpRequest) {
+            this.tries++;
+            if (this.tries <= this.retryLimit) {
+                $.ajax(this);
+                return;
+            } else {
+                alert("There was an error posting your idea. Error thrown was: " + XMLHttpRequest.statusText);
+            }
+        }
+    });
+};
+
+Ideas.prototype.review = function(options) {
+    $.ajax({
+        url: options.url,
+        type: 'PUT',
+        timeout: 5000,
+        tries: 0,
+        retryLimit: 3,
+        success: options.success,
+        error: function(XMLHttpRequest) {
+            this.tries++;
+            if (this.tries <= this.retryLimit) {
+                $.ajax(this);
+                return;
+            } else {
+                alert("There was an error posting your idea. Error thrown was: " + XMLHttpRequest.statusText);
+            }
+        }
+    });
+};
+
 Ideas.prototype.parseIdeas = function(data, options) {
     var $template, markupTemp = [], ideas = data._embedded.ideas;
     
-    for (var i = 0; i < ideas.length; i++) {
-        var $idea = ich.idea(ideas[i]);
+    //for (var i = 0; i < ideas.length; i++) {
+    if (ideas.length > 0) {
+        var $idea = ich.idea(ideas[0]);
         markupTemp.push($idea);
+    //}
+
+        $template = $.map(markupTemp, function(value, index) {
+            return(value.get());
+        });
+
+        IdeasView.prototype.prependIdea($template);
     }
-
-    $template = $.map(markupTemp, function(value, index) {
-        return(value.get());
-    });
-
-    IdeasView.prototype.prependIdea($template);
 };
 
 
@@ -98,6 +140,9 @@ var IdeasView = function(options) {
     
     $('#new_idea').submit(post);
     $('#login_form').submit(login);
+    $('body').on('click', '#review', this.reviewStatus);
+    $('body').on('click', '#delete', this.deleteStatus);
+    $('body').on('click', '#complete', this.deleteStatus);
 };
 
 IdeasView.prototype.loginStatus = function(e) {
@@ -128,8 +173,34 @@ IdeasView.prototype.postStatus = function(e) {
         url: $('#new_idea').attr('action'),
         description: $('#description').val(),
         success: function(data) {
-            that.ideas.loadJSON(that);
+            Ideas.prototype.loadJSON(that);
             that.clearInput();
+        }
+    });
+};
+
+IdeasView.prototype.deleteStatus = function(e) {
+    e.preventDefault();
+    var that = this;
+    Ideas.prototype.delete({
+        url: $(this).data('action'),
+        success: function(data) {
+            $(that).closest('li').fadeOut(function() {
+                Ideas.prototype.loadJSON(that);
+            });
+        }
+    });
+};
+
+IdeasView.prototype.reviewStatus = function(e) {
+    e.preventDefault();
+    var that = this;
+    Ideas.prototype.review({
+        url: $(this).data('action'),
+        success: function(data) {
+            $(that).closest('li').fadeOut(function() {
+                Ideas.prototype.loadJSON(that);
+            });
         }
     });
 };
