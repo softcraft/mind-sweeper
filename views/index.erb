@@ -29,7 +29,7 @@
 
     <form action="" id="new_idea"> 
       <textarea cols="40" rows="2" name="post[description]" id="description" maxlength="140"></textarea>
-      <button id="collect">Crear</button>
+      <button id="collect">Anótalo</button>
     </form>
 
     <section id="ideas_">
@@ -47,9 +47,9 @@
             </div>
           </div>
           <footer>
-             <button id="complete" data-action="{{_links.delete.href}}">Completar</button>
+             <button id="complete" data-action="{{_links.delete.href}}">Házlo</button>
              <button id="review" data-action="{{_links.review.href}}">Despues</button>
-             <button id="delete" data-action="{{_links.delete.href}}">Borrar</button>
+             <button id="delete" data-action="{{_links.delete.href}}">No!</button>
           </footer>
         </article>
       </li>
