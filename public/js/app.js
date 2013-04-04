@@ -199,9 +199,8 @@ IdeasView.prototype.reviewStatus = function(e) {
     Ideas.prototype.review({
         url: $(this).data('action'),
         success: function(data) {
-            $(that).closest('li').fadeOut(function() {
-                Ideas.prototype.loadJSON(that);
-            });
+            $(that).closest('li').hide();
+            Ideas.prototype.loadJSON(that);
         }
     });
 };
