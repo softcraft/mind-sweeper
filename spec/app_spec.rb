@@ -84,6 +84,7 @@ describe 'mind sweeper' do
       subject.should == 422
     end
   end
+
   context 'collect' do
 
     let(:user)   { double('user') }
@@ -113,7 +114,7 @@ describe 'mind sweeper' do
 
   end
 
-  context 'review' do
+  context 'update' do
 
     let(:idea)   { double('idea') }
 
@@ -121,14 +122,54 @@ describe 'mind sweeper' do
       Idea.stub(:find).and_return(idea)
     end
 
-    subject do
-      put settings.idea_path
-      last_response.status
+    context 'review' do
+      subject do
+        put settings.review_path
+        last_response.status
+      end
+
+      it 'touches an idea' do
+        idea.should_receive(:touch)
+        subject.should == 204
+      end
     end
 
-    it 'touches an idea' do
-      idea.should_receive(:touch)
-      subject.should == 204
+    context 'do' do
+
+      let(:params) { {datetime: DateTime.now} }
+
+      before { DateTime.stub(:now).and_return(DateTime.now) }
+
+      subject do
+        put settings.do_path
+        last_response.status
+      end
+
+      it 'updates dates of an idea' do
+        idea.should_receive(:update_attributes).with(params).
+          and_return(true)
+
+        subject.should == 204
+      end
+    end
+
+    context 'schedule' do
+
+      let(:datetime) { "2022/09/01 22:00 CST" }
+      let(:params) { {datetime: datetime} }
+      let(:expected_params) { { datetime: DateTime.parse(datetime)}}
+
+      subject do
+        put settings.idea_path, params
+        last_response.status
+      end
+
+      it 'updates dates of an idea' do
+        idea.should_receive(:update_attributes!).with(expected_params).
+          and_return(true)
+
+        subject.should == 204
+      end
     end
 
   end
@@ -159,34 +200,62 @@ describe 'mind sweeper' do
     let(:signup)   { root.links[:signup].href }
     let(:login)    { root.links[:login].href }
     let(:collect)  { user.links[:collect].href }
-    let(:review_idea)   { idea.links[:review].href }
-    let(:delete_idea)   { idea.links[:delete].href }
-    let(:idea)     do
-      idea =  user.ideas.first.extend(Representers::Idea)
+    let(:review_idea)   { next_idea.links[:review].href }
+    let(:delete_idea)   { next_idea.links[:delete].href }
+    let(:do_idea)       { next_idea.links[:do].href }
+    let(:next_idea)     do
+      idea =  user.next_idea.extend(Representers::Idea)
       idea.to_json
       idea
-    end 
+    end
+    let(:collected_idea) do
+      idea = user.next_idea
+      idea.to_json
+      idea
+    end
+    let(:schedule_date) { "2013/09/02 10:00 CST" }
 
     before do
+      pending
       get '/api'
       root_response = JSON.parse(last_response.body).to_json
       root.from_json(root_response)
-    end
 
-    after do
-      User.last.delete
-    end
-
-    it 'tests everything is working as expected' do
       post signup, params
+
       post login, params
       login_response = JSON.parse(last_response.body).to_json
       user.from_json(login_response)
-      
+    end
+
+    after do
+      User.last.delete if User.count > 0
+    end
+
+    it 'collects and deletes an idea' do
       post   collect, { description: 'new idea' }
-      put    review_idea
-      delete delete_idea 
-      user.ideas.should == []
+      delete delete_idea
+      user.next_idea.should == nil
+    end
+
+    it 'collects and reviews an idea' do
+      post   collect, { description: 'first idea' }
+      post   collect, { description: 'second idea' }
+      put review_idea
+      user.next_idea.description.should == 'second idea'
+    end
+
+    it 'collects and does an idea' do
+      post   collect, { description: 'new idea' }
+      put do_idea
+      user.next_idea.datetime.to_s.should == DateTime.now.to_s
+    end
+
+    it 'collects and schedules an idea' do
+      post   collect, { description: 'new idea' }
+      put do_idea
+      put collected_idea.links[:schedule].href, { datetime: schedule_date }
+      user.next_idea.datetime.should == schedule_date
     end
   end
 

@@ -35,10 +35,27 @@ post settings.collect_path do
 end
 
 put settings.idea_path do
-  idea = Idea.find(params[:idea])
-  idea.touch
+  begin
+    idea = Idea.find(params[:idea])
+    datetime = DateTime.parse(params[:datetime])
+    idea.update_attributes!(datetime: datetime)
+    204
+  rescue
+    422
+  end
+end
 
+put settings.review_path do
+  idea = Idea.find(params[:idea])
+
+  idea.touch
   204
+end
+
+put settings.do_path do
+  idea = Idea.find(params[:idea])
+
+  idea.update_attributes(datetime: DateTime.now) ? 204 : 422
 end
 
 delete settings.idea_path do
