@@ -3,6 +3,7 @@ class Idea
   include Mongoid::Timestamps
 
   field :description
+  field :datetime, type: DateTime
 
   belongs_to :user
 
