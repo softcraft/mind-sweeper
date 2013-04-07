@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Representers::Root do
-  
+
   subject { Object.new.extend(described_class) }
   before  { subject.to_json }
 
