@@ -73,7 +73,7 @@ User details
 #### OK
 
 * Status: 200
-* Embedded: ideas
+* Embedded: next_idea
 * Links: collect
 
 ## Collect
