@@ -14,12 +14,20 @@ module Representers
       "#{settings.host}#{collect_path}"
     end
 
-    collection :ideas, {
+    collection :first_idea, {
       from: 'ideas',
       class: Idea,
       extend: Representers::Idea,
       embedded: true
-    }  
+    }
+
+    def first_idea
+      selected_ideas = ideas.reject do |i|
+        i.datetime > DateTime.now if i.datetime
+      end
+
+      selected_ideas.first ? [selected_ideas.first] : []
+    end
 
     def user_path
       settings.user_path.gsub(':user', id)
@@ -28,5 +36,6 @@ module Representers
     def collect_path
       settings.collect_path.gsub(':user', id)
     end
-      end
+
   end
+end
