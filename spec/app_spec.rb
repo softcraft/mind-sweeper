@@ -48,6 +48,11 @@ describe 'mind sweeper' do
     let(:user)       { User.new }
     let(:login_path) { settings.login_path }
 
+    before do
+      user.stub(:first_idea)
+      Idea.stub(:where).and_return(Mongoid::Criteria.new(Idea))
+    end
+
     subject do
       post login_path, params
       last_response.status
@@ -68,6 +73,11 @@ describe 'mind sweeper' do
 
     let(:user)       { User.new }
     let(:user_path) { settings.user_path.gsub(':user', user.id) }
+
+    before do
+      user.stub(:first_idea)
+      Idea.stub(:where).and_return(Mongoid::Criteria.new(Idea))
+    end
 
     subject do
       get user_path, params
@@ -194,7 +204,7 @@ describe 'mind sweeper' do
 
   end
 
-  context 'integration', type: 'integration' do
+  context 'integration', integration: true do
     let(:root)     { Object.new.extend(Representers::Root) }
     let(:user)     { User.last.extend(Representers::User) }
     let(:signup)   { root.links[:signup].href }
@@ -215,14 +225,15 @@ describe 'mind sweeper' do
     end
     let(:schedule_date) { "2013/09/02 10:00 CST" }
 
-    before do
-      pending
+    before :all do
       get '/api'
       root_response = JSON.parse(last_response.body).to_json
       root.from_json(root_response)
 
       post signup, params
+    end
 
+    before do
       post login, params
       login_response = JSON.parse(last_response.body).to_json
       user.from_json(login_response)

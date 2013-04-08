@@ -5,7 +5,12 @@ describe Representers::User do
   let(:user) { User.new } 
 
   subject { user.extend(described_class) }
-  before  { subject.to_json }
+
+  before do
+    user.stub(:first_idea)
+    Idea.stub(:where).and_return(Mongoid::Criteria.new(Idea))
+    subject.to_json
+  end
 
   it 'renders correctly' do
     subject.links['self'].href.should == "/api/users/#{user.id}"

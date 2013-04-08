@@ -21,14 +21,6 @@ module Representers
       embedded: true
     }
 
-    def first_idea
-      selected_ideas = ideas.reject do |i|
-        i.datetime > DateTime.now if i.datetime
-      end
-
-      selected_ideas.first ? [selected_ideas.first] : []
-    end
-
     def user_path
       settings.user_path.gsub(':user', id)
     end
