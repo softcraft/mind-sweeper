@@ -205,69 +205,82 @@ describe 'mind sweeper' do
   end
 
   context 'integration', integration: true do
-    let(:root)     { Object.new.extend(Representers::Root) }
-    let(:user)     { User.last.extend(Representers::User) }
-    let(:signup)   { root.links[:signup].href }
-    let(:login)    { root.links[:login].href }
-    let(:collect)  { user.links[:collect].href }
-    let(:review_idea)   { next_idea.links[:review].href }
-    let(:delete_idea)   { next_idea.links[:delete].href }
-    let(:do_idea)       { next_idea.links[:do].href }
-    let(:next_idea)     do
-      idea =  user.next_idea.extend(Representers::Idea)
-      idea.to_json
-      idea
-    end
-    let(:collected_idea) do
-      idea = user.next_idea
-      idea.to_json
-      idea
-    end
-    let(:schedule_date) { "2013/09/02 10:00 CST" }
-
-    before :all do
-      get '/api'
-      root_response = JSON.parse(last_response.body).to_json
-      root.from_json(root_response)
-
-      post signup, params
-    end
+    let(:root)          { Object.new.extend(Representers::Root) }
+    let(:signup)        { root.links[:signup].href }
+    let(:login)         { root.links[:login].href }
+    let(:schedule_date) { "2033/09/02 10:00 CST" }
 
     before do
-      post login, params
-      login_response = JSON.parse(last_response.body).to_json
-      user.from_json(login_response)
+      get '/api'
+      root.from_json(last_response.body)
+
+      post signup, params
+      post login,  params
+
+      @login_response = JSON.parse(last_response.body)
     end
 
     after do
       User.last.delete if User.count > 0
     end
 
-    it 'collects and deletes an idea' do
-      post   collect, { description: 'new idea' }
-      delete delete_idea
-      user.next_idea.should == nil
+    it 'works as expected' do
+      user_collect = @login_response["_links"]["collect"]["href"]
+      user_self    = @login_response["_links"]["self"]["href"]
+
+      # collect
+      post user_collect, { description: 'first idea' }
+      post user_collect, { description: 'second idea' }
+
+      get user_self
+      user_response = JSON.parse(last_response.body)
+      user_ideas    = user_response["_embedded"]["ideas"]
+
+      user_ideas.first["description"].should == "first idea"
+
+      # review
+      idea_review = user_ideas.first["_links"]["review"]["href"]
+
+      put idea_review
+
+      get user_self
+      user_response = JSON.parse(last_response.body)
+      user_ideas    = user_response["_embedded"]["ideas"]
+
+      user_ideas.first["description"].should == "second idea"
+
+      #delete
+      idea_delete = user_ideas.first["_links"]["delete"]["href"]
+
+      delete idea_delete
+
+      get user_self
+      user_response = JSON.parse(last_response.body)
+      user_ideas    = user_response["_embedded"]["ideas"]
+
+      user_ideas.first["description"].should == "first idea"
+
+      #do
+      idea_do = user_ideas.first["_links"]["do"]["href"]
+
+      put idea_do
+
+      get user_self
+      user_response = JSON.parse(last_response.body)
+      user_ideas    = user_response["_embedded"]["ideas"]
+
+      #schedule
+      user_schedule = user_ideas.first["_links"]["schedule"]["href"]
+
+      put user_schedule, { datetime: schedule_date }
+
+      get user_self
+      user_response = JSON.parse(last_response.body)
+      user_ideas    = user_response["_embedded"]["ideas"]
+
+      user_ideas.should == []
     end
 
-    it 'collects and reviews an idea' do
-      post   collect, { description: 'first idea' }
-      post   collect, { description: 'second idea' }
-      put review_idea
-      user.next_idea.description.should == 'second idea'
-    end
-
-    it 'collects and does an idea' do
-      post   collect, { description: 'new idea' }
-      put do_idea
-      user.next_idea.datetime.to_s.should == DateTime.now.to_s
-    end
-
-    it 'collects and schedules an idea' do
-      post   collect, { description: 'new idea' }
-      put do_idea
-      put collected_idea.links[:schedule].href, { datetime: schedule_date }
-      user.next_idea.datetime.should == schedule_date
-    end
   end
 
 end
