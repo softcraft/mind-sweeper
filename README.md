@@ -29,16 +29,6 @@ Create a new user
 * Method: POST
 * Required properties: username, password
 
-### Responses
-
-#### Created
-
-* Status: 201
-
-#### Bad parameters
-
-* Status: 422
-
 ## Login
 
 Log a user into the app
@@ -47,17 +37,6 @@ Log a user into the app
 
 * Method: POST
 * Required properties: username, password
-
-### Responses
-
-#### Created
-
-* Status: 200
-* Body:   user
-
-#### Bad parameters
-
-* Status: 422
 
 ## User
 
@@ -68,14 +47,6 @@ User details
 * Method: GET
 * Required properties: id
 
-### Responses
-
-#### OK
-
-* Status: 200
-* Embedded: next_idea
-* Links: collect
-
 ## Collect
 
 Save an idea
@@ -84,16 +55,6 @@ Save an idea
 
 * Method: POST
 * Required properties: description
-
-### Responses
-
-#### Created
-
-* Status: 201
-
-#### Bad parameters
-
-* Status: 422
 
 ## Idea
 
@@ -104,14 +65,6 @@ Idea details
 * Method: GET
 * Required properties: id
 
-### Responses
-
-#### OK
-
-* Status: 200
-* Properties: id, description
-* Links: delete, review
-
 ## Review
 
 Mark an idea as reviewed
@@ -121,16 +74,6 @@ Mark an idea as reviewed
 * Method: POST
 * Required properties: id
 
-### Responses
-
-#### Updated
-
-* Status: 204
-
-#### Bad parameters
-
-* Status: 422
-
 ## Delete
 
 Kill an idea
@@ -139,13 +82,3 @@ Kill an idea
 
 * Method: DELETE
 * Required properties: id
-
-### Responses
-
-#### Updated
-
-* Status: 204
-
-#### Bad parameters
-
-* Status: 422
