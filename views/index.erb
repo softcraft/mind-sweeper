@@ -4,6 +4,8 @@
     <title>Mochihua</title>
     
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all" />
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans|Raleway:100' rel='stylesheet' type='text/css' />
 
     <meta charset="utf-8" />
@@ -43,18 +45,35 @@
             <div class="content">
               {{description}}
             </div>
+            <div class="date">
+            {{datetime}}
+            </div>
           </div>
           <footer>
-             <button id="complete" data-action="{{_links.delete.href}}">Házlo</button>
-             <button id="review" data-action="{{_links.review.href}}">Despues</button>
-             <button id="delete" data-action="{{_links.delete.href}}">No!</button>
+             {{#_links.do.href}}
+               <button id="do" data-action="{{_links.do.href}}">Házlo</button>
+             {{/_links.do.href}}
+             {{^_links.do.href}}
+               <button id="complete" data-action="{{_links.delete.href}}">Hecho</button>
+             {{/_links.do.href}}
+             {{#_links.review.href}}
+               <button id="review" data-action="{{_links.review.href}}">Despues</button>
+             {{/_links.review.href}}
+             {{#_links.schedule.href}}
+               <input id="date" />
+               <button id="schedule" data-action="{{_links.schedule.href}}">Despues</button>
+             {{/_links.schedule.href}}
+            <button id="delete" data-action="{{_links.delete.href}}">No!</button>
           </footer>
         </article>
       </li>
     </script>
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://rawgithub.com/trentrichardson/jQuery-Timepicker-Addon/master/jquery-ui-timepicker-addon.js"></script>
     <script type="text/javascript" src="//rawgithub.com/HenrikJoreteg/ICanHaz.js/master/ICanHaz.min.js"></script>
+    <script type="text/javascript" src="http://ejohn.org/files/pretty.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
   </body>
 </html>
