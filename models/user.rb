@@ -5,7 +5,7 @@ class User
   field :username
   field :password
 
-  has_many :ideas, order: [:datetime.asc, :updated_at.asc]
+  has_many :ideas, order: [:datetime.desc, :updated_at.asc]
 
   validates_presence_of :username
   validates_presence_of :password
