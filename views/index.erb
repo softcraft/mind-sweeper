@@ -23,13 +23,13 @@
         <input type="password" name="password" />
       </section>
       <section id="login-button">
-        <button id="login">Entrar</button>
+        <button id="login"><img src="images/key.png"></button>
       </section>
     </form>
 
     <form action="" id="new_idea"> 
       <textarea cols="40" rows="2" name="post[description]" id="description" maxlength="140"></textarea>
-      <button id="collect">Anótalo</button>
+      <button id="collect"><img src="images/edit.png"></button>
     </form>
 
     <section id="ideas_">
@@ -51,19 +51,19 @@
           </div>
           <footer>
              {{#_links.do.href}}
-               <button id="do" data-action="{{_links.do.href}}">Házlo</button>
+               <button id="do" data-action="{{_links.do.href}}"><img src="images/play.png"></button>
              {{/_links.do.href}}
              {{^_links.do.href}}
-               <button id="complete" data-action="{{_links.delete.href}}">Hecho</button>
+               <button id="complete" data-action="{{_links.delete.href}}"><img src="images/check.png"></button>
              {{/_links.do.href}}
              {{#_links.review.href}}
-               <button id="review" data-action="{{_links.review.href}}">Despues</button>
+             <button id="review" data-action="{{_links.review.href}}"><img src="images/arrow.png"></button>
              {{/_links.review.href}}
              {{#_links.schedule.href}}
                <input id="date" />
-               <button id="schedule" data-action="{{_links.schedule.href}}">Despues</button>
+               <button id="schedule" data-action="{{_links.schedule.href}}"><img src="images/calendar.png"></button>
              {{/_links.schedule.href}}
-            <button id="delete" data-action="{{_links.delete.href}}">No!</button>
+            <button id="delete" data-action="{{_links.delete.href}}"><img src="images/trash-can.png"></button>
           </footer>
         </article>
       </li>
