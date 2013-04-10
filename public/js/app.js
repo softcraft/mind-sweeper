@@ -131,7 +131,7 @@ Ideas.prototype.request = function(options) {
         success: options.success,
         beforeSend: options.beforeSend,
         error: function(XMLHttpRequest) {
-          alert("Error in request: " + XMLHttpRequest.statusText);
+          console.log("Error in request: " + XMLHttpRequest.statusText);
         }
     });
 };
