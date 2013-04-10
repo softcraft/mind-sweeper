@@ -1,160 +1,13 @@
+$(document).ready(function() {
+    var ideas = new Ideas();
+
+    new IdeasView({ ideas: ideas });
+
+    $('#ideas_').hide();
+    $('#new_idea').hide();
+});
+
 var Ideas = function() {};
-
-Ideas.prototype.login = function(options) {
-    var that = this;
-
-    $.ajax({
-        url: options.url,
-        type: 'POST',
-        timeout: 5000,
-        tries: 0,
-        retryLimit: 3,
-        dataType: 'json',
-        data: options.data,
-        success: options.success,
-        error: function(XMLHttpRequest) {
-            this.tries++;
-            if (this.tries <= this.retryLimit) {
-                $.ajax(this);
-                return;
-            } else {
-                alert("There was an error loading the JSON data. Error thrown was: " + XMLHttpRequest.statusText);
-            }
-        }
-    });
-};
-
-Ideas.prototype.loadJSON = function(options) {
-  var that = this;
-
-  $.ajax({
-        url: $('.reload').attr('href'),
-        type: 'GET',
-        timeout: 5000,
-        dataType: 'json',
-        tries: 0,
-        retryLimit: 3,
-        beforeSend: function() {
-            $('#ideas').find('li').remove();
-            $('#ideas').show();
-            $('#ideas').addClass('loading');
-        },
-        success: function(data, options) {
-            Ideas.prototype.parseIdeas(data, options);
-            $('#date').datetimepicker({
-              dateFormat: 'yy/mm/dd'
-            });
-        },
-        error: function(XMLHttpRequest) {
-            this.tries++;
-            if (this.tries <= this.retryLimit) {
-               $.ajax(this);
-               return;
-            } else {
-                alert("There was an error loading the JSON data. Error thrown was: " + XMLHttpRequest.statusText);
-            }
-        }
-    });
-};
-
-Ideas.prototype.post = function(options) {
-    $.ajax({
-        url: options.url,
-        type: 'POST',
-        timeout: 5000,
-        tries: 0,
-        retryLimit: 3,
-        data: { description: options.description },
-        success: options.success,
-        error: function(XMLHttpRequest) {
-            this.tries++;
-            if (this.tries <= this.retryLimit) {
-                $.ajax(this);
-                return;
-            } else {
-                alert("There was an error posting your idea. Error thrown was: " + XMLHttpRequest.statusText);
-            }
-        }
-    });
-};
-
-Ideas.prototype.delete = function(options) {
-    $.ajax({
-        url: options.url,
-        type: 'DELETE',
-        timeout: 5000,
-        tries: 0,
-        retryLimit: 3,
-        success: options.success,
-        error: function(XMLHttpRequest) {
-            this.tries++;
-            if (this.tries <= this.retryLimit) {
-                $.ajax(this);
-                return;
-            } else {
-                alert("There was an error posting your idea. Error thrown was: " + XMLHttpRequest.statusText);
-            }
-        }
-    });
-};
-
-Ideas.prototype.review = function(options) {
-    $.ajax({
-        url: options.url,
-        type: 'PUT',
-        timeout: 5000,
-        tries: 0,
-        retryLimit: 3,
-        success: options.success,
-        error: function(XMLHttpRequest) {
-            this.tries++;
-            if (this.tries <= this.retryLimit) {
-                $.ajax(this);
-                return;
-            } else {
-                alert("There was an error posting your idea. Error thrown was: " + XMLHttpRequest.statusText);
-            }
-        }
-    });
-};
-
-Ideas.prototype.schedule = function(options) {
-    $.ajax({
-        url: options.url,
-        data: {datetime: options.datetime + " CDT"},
-        type: 'PUT',
-        timeout: 5000,
-        tries: 0,
-        retryLimit: 3,
-        success: options.success,
-        error: function(XMLHttpRequest) {
-            this.tries++;
-            if (this.tries <= this.retryLimit) {
-                $.ajax(this);
-                return;
-            } else {
-                alert("There was an error posting your idea. Error thrown was: " + XMLHttpRequest.statusText);
-            }
-        }
-    });
-};
-
-Ideas.prototype.parseIdeas = function(data, options) {
-    var $template, markupTemp = [], ideas = data._embedded.ideas;
-    
-    //for (var i = 0; i < ideas.length; i++) {
-    if (ideas.length > 0) {
-        var $idea = ich.idea(ideas[0]);
-        markupTemp.push($idea);
-    //}
-        $template = $.map(markupTemp, function(value, index) {
-            return(value.get());
-        });
-
-        IdeasView.prototype.prependIdea($template);
-    }
-};
-
 
 var IdeasView = function(options) {
     this.ideas = options.ideas;
@@ -170,11 +23,26 @@ var IdeasView = function(options) {
     $('body').on('click', '#schedule', this.scheduleStatus);
 };
 
-IdeasView.prototype.loginStatus = function(e) {
+IdeasView.prototype.postStatus = function(e) {
     e.preventDefault();
     var that = this;
-    this.ideas.login({
+    this.ideas.request({
+        url: $('#new_idea').attr('action'),
+        data: { description: $('#description').val() },
+        type: 'POST',
+        success: function(data) {
+            Ideas.prototype.loadJSON(that);
+            that.clearInput();
+        }
+    });
+};
+
+IdeasView.prototype.loginStatus = function(e) {
+    e.preventDefault();
+
+    this.ideas.request({
         url: $('#login_form').attr('action'),
+        type: 'POST',
         data: {
             username: $('[name=username]').val(),
             password: $('[name=password]').val()
@@ -195,24 +63,12 @@ IdeasView.prototype.loginStatus = function(e) {
     });
 };
 
-IdeasView.prototype.postStatus = function(e) {
-    e.preventDefault();
-    var that = this;
-    this.ideas.post({
-        url: $('#new_idea').attr('action'),
-        description: $('#description').val(),
-        success: function(data) {
-            Ideas.prototype.loadJSON(that);
-            that.clearInput();
-        }
-    });
-};
-
 IdeasView.prototype.deleteStatus = function(e) {
     e.preventDefault();
     var that = this;
-    Ideas.prototype.delete({
+    Ideas.prototype.request({
         url: $(this).data('action'),
+        type: 'DELETE',
         success: function(data) {
             $(that).closest('li').fadeOut(function() {
                 Ideas.prototype.loadJSON(that);
@@ -224,8 +80,9 @@ IdeasView.prototype.deleteStatus = function(e) {
 IdeasView.prototype.reviewStatus = function(e) {
     e.preventDefault();
     var that = this;
-    Ideas.prototype.review({
+    Ideas.prototype.request({
         url: $(this).data('action'),
+        type: 'PUT',
         success: function(data) {
             $(that).closest('li').hide();
             Ideas.prototype.loadJSON(that);
@@ -236,8 +93,9 @@ IdeasView.prototype.reviewStatus = function(e) {
 IdeasView.prototype.doStatus = function(e) {
     e.preventDefault();
     var that = this;
-    Ideas.prototype.review({
+    Ideas.prototype.request({
         url: $(this).data('action'),
+        type: 'PUT',
         success: function(data) {
             $(that).closest('li').hide();
             Ideas.prototype.loadJSON(that);
@@ -248,14 +106,62 @@ IdeasView.prototype.doStatus = function(e) {
 IdeasView.prototype.scheduleStatus = function(e) {
     e.preventDefault();
     var that = this;
-    Ideas.prototype.schedule({
-        datetime: $('#date').val(),
+    Ideas.prototype.request({
         url: $(this).data('action'),
+        data: {datetime: $('#date').val() + " CDT"},
+        type: 'PUT',
         success: function(data) {
             $(that).closest('li').hide();
             Ideas.prototype.loadJSON(that);
         }
     });
+};
+
+Ideas.prototype.request = function(options) {
+    $.ajax({
+        url: options.url,
+        type: options.type,
+        timeout: 5000,
+        data: options.data,
+        dataType: 'json',
+        success: options.success,
+        beforeSend: options.beforeSend,
+        error: function(XMLHttpRequest) {
+          alert("Error in request: " + XMLHttpRequest.statusText);
+        }
+    });
+};
+
+Ideas.prototype.loadJSON = function(options) {
+  this.request({
+    url: $('.reload').attr('href'),
+    type: 'GET',
+    beforeSend: function() {
+      $('#ideas').find('li').remove();
+      $('#ideas').show();
+      $('#ideas').addClass('loading');
+    },
+    success: function(data, options) {
+      Ideas.prototype.parseIdeas(data, options);
+      $('#date').datetimepicker({
+        dateFormat: 'yy/mm/dd'
+      });
+    }
+  });
+};
+
+Ideas.prototype.parseIdeas = function(data, options) {
+    var $template, markupTemp = [], ideas = data._embedded.ideas;
+
+    if (ideas.length > 0) {
+        var $idea = ich.idea(ideas[0]);
+        markupTemp.push($idea);
+        $template = $.map(markupTemp, function(value, index) {
+            return(value.get());
+        });
+
+        IdeasView.prototype.prependIdea($template);
+    }
 };
 
 IdeasView.prototype.prependIdea = function(data) {
@@ -285,13 +191,4 @@ $(document).delegate('textarea', 'keyup', function(event) {
         self.height(newHeight);
         self.data('currentHeight',newHeight);
     }
-});
-
-$(document).ready(function() {
-    var ideas = new Ideas();
-
-    new IdeasView({ ideas: ideas });
-
-    $('#ideas_').hide();
-    $('#new_idea').hide();
 });
