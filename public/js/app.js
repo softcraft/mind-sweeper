@@ -31,7 +31,7 @@ IdeasView.prototype.postStatus = function(e) {
         data: { description: $('#description').val() },
         type: 'POST',
         success: function(data) {
-            Ideas.prototype.loadJSON(that);
+            Ideas.prototype.loadJSON();
             that.clearInput();
         }
     });
@@ -58,22 +58,26 @@ IdeasView.prototype.loginStatus = function(e) {
                 $('#new_idea').fadeIn();
                 $('#ideas_').fadeIn(function(data, options) {
                 });
+                setInterval(function() {
+                  Ideas.prototype.loadJSON();
+                }, 60000);
+
             });
         }
     });
 };
 
 IdeasView.prototype.deleteStatus = function(e) {
-    e.preventDefault();
-    var that = this;
-    Ideas.prototype.request({
-        url: $(this).data('action'),
-        type: 'DELETE',
-        success: function(data) {
-            $(that).closest('li').fadeOut(function() {
-                Ideas.prototype.loadJSON(that);
-            });
-        }
+  e.preventDefault();
+  var that = this;
+  Ideas.prototype.request({
+    url: $(this).data('action'),
+    type: 'DELETE',
+    success: function(data) {
+      $(that).closest('li').fadeOut(function() {
+        Ideas.prototype.loadJSON();
+      });
+    }
     });
 };
 
@@ -85,7 +89,7 @@ IdeasView.prototype.reviewStatus = function(e) {
         type: 'PUT',
         success: function(data) {
             $(that).closest('li').hide();
-            Ideas.prototype.loadJSON(that);
+            Ideas.prototype.loadJSON();
         }
     });
 };
@@ -98,7 +102,7 @@ IdeasView.prototype.doStatus = function(e) {
         type: 'PUT',
         success: function(data) {
             $(that).closest('li').hide();
-            Ideas.prototype.loadJSON(that);
+            Ideas.prototype.loadJSON();
         }
     });
 };
@@ -112,7 +116,7 @@ IdeasView.prototype.scheduleStatus = function(e) {
         type: 'PUT',
         success: function(data) {
             $(that).closest('li').hide();
-            Ideas.prototype.loadJSON(that);
+            Ideas.prototype.loadJSON();
         }
     });
 };
@@ -132,7 +136,7 @@ Ideas.prototype.request = function(options) {
     });
 };
 
-Ideas.prototype.loadJSON = function(options) {
+Ideas.prototype.loadJSON = function() {
   this.request({
     url: $('.reload').attr('href'),
     type: 'GET',
