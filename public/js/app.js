@@ -21,6 +21,12 @@ var IdeasView = function(options) {
     $('body').on('click', '#do', this.doStatus);
     $('body').on('click', '#complete', this.deleteStatus);
     $('body').on('click', '#schedule', this.scheduleStatus);
+    $('body').on('keypress', '#description', function (e) {
+      if (e.which == 13) {
+        $('#new_idea').submit();
+        return false;
+      }
+    });
 };
 
 IdeasView.prototype.postStatus = function(e) {
@@ -56,8 +62,7 @@ IdeasView.prototype.loginStatus = function(e) {
                   dateFormat: 'yy/mm/dd'
                 });
                 $('#new_idea').fadeIn();
-                $('#ideas_').fadeIn(function(data, options) {
-                });
+                $('#ideas_').fadeIn();
                 setInterval(function() {
                   Ideas.prototype.loadJSON();
                 }, 60000);
@@ -68,16 +73,12 @@ IdeasView.prototype.loginStatus = function(e) {
 };
 
 IdeasView.prototype.deleteStatus = function(e) {
-  e.preventDefault();
-  var that = this;
-  Ideas.prototype.request({
-    url: $(this).data('action'),
-    type: 'DELETE',
-    success: function(data) {
-      $(that).closest('li').fadeOut(function() {
-        Ideas.prototype.loadJSON();
-      });
-    }
+    e.preventDefault();
+    var that = this;
+    Ideas.prototype.request({
+      url: $(this).data('action'),
+      type: 'DELETE',
+      success: Ideas.prototype.success(that)
     });
 };
 
@@ -87,10 +88,7 @@ IdeasView.prototype.reviewStatus = function(e) {
     Ideas.prototype.request({
         url: $(this).data('action'),
         type: 'PUT',
-        success: function(data) {
-            $(that).closest('li').hide();
-            Ideas.prototype.loadJSON();
-        }
+        success: Ideas.prototype.success(that)
     });
 };
 
@@ -100,10 +98,7 @@ IdeasView.prototype.doStatus = function(e) {
     Ideas.prototype.request({
         url: $(this).data('action'),
         type: 'PUT',
-        success: function(data) {
-            $(that).closest('li').hide();
-            Ideas.prototype.loadJSON();
-        }
+        success: Ideas.prototype.success(that)
     });
 };
 
@@ -114,12 +109,10 @@ IdeasView.prototype.scheduleStatus = function(e) {
         url: $(this).data('action'),
         data: {datetime: $('#date').val() + " CDT"},
         type: 'PUT',
-        success: function(data) {
-            $(that).closest('li').hide();
-            Ideas.prototype.loadJSON();
-        }
+        success: Ideas.prototype.success(that)
     });
 };
+
 
 Ideas.prototype.request = function(options) {
     $.ajax({
@@ -152,6 +145,11 @@ Ideas.prototype.loadJSON = function() {
       });
     }
   });
+};
+
+Ideas.prototype.success = function(that) {
+  $(that).closest('li').hide();
+  Ideas.prototype.loadJSON();
 };
 
 Ideas.prototype.parseIdeas = function(data, options) {
