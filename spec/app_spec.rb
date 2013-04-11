@@ -60,7 +60,7 @@ describe 'mind sweeper' do
 
     it 'responds succesfully' do
       User.stub(:where).with(params.stringify_keys).and_return([user])
-      subject.should == 200
+      subject.should == 302
     end
 
     it 'rejects wrong credentials' do
@@ -216,8 +216,8 @@ describe 'mind sweeper' do
 
       post signup, params
       post login,  params
-
-      @login_response = JSON.parse(last_response.body)
+      get last_response.headers['Location']
+      @user_response = JSON.parse(last_response.body)
     end
 
     after do
@@ -225,8 +225,8 @@ describe 'mind sweeper' do
     end
 
     it 'works as expected' do
-      user_collect = @login_response["_links"]["collect"]["href"]
-      user_self    = @login_response["_links"]["self"]["href"]
+      user_collect = @user_response["_links"]["collect"]["href"]
+      user_self    = @user_response["_links"]["self"]["href"]
 
       # collect
       post user_collect, { description: 'first idea' }

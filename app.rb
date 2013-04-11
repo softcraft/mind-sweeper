@@ -22,9 +22,11 @@ post settings.signup_path do
 end
 
 post settings.login_path do
-  user = User.where(params).first
-
-  user ? user.extend(Representers::User).to_json : 422
+  if user = User.where(params).first
+    redirect settings.user_path.gsub(":user", user.id)
+  else
+    422
+  end
 end
 
 post settings.collect_path do
