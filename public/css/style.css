@@ -164,7 +164,7 @@ button {
 }
 
 #new_idea {
-    display: inline-block;
+    display: none;
     text-align: left;
     padding: 5px;
     position: relative;

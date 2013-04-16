@@ -6,6 +6,7 @@ gem 'thin'
 gem 'mongoid'
 gem 'roar'
 gem 'sinatra-contrib'
+gem 'sinatra-cross_origin'
 
 group :test do
   gem 'rspec'

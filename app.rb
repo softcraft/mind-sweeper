@@ -1,12 +1,18 @@
 require 'sinatra'
 require 'sinatra/config_file'
 require 'mongoid'
+require 'sinatra'
+require 'sinatra/cross_origin'
 
 require_relative 'models/idea'
 require_relative 'models/user'
 require_relative 'representers/root'
 require_relative 'representers/idea'
 require_relative 'representers/user'
+
+configure do
+  enable :cross_origin
+end
 
 config_file 'config/config.yml'
 Mongoid.load!("config/mongoid.yml")
