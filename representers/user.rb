@@ -14,7 +14,7 @@ module Representers
       "#{settings.host}#{collect_path}"
     end
 
-    collection :first_idea, {
+    collection :ordered_ideas, {
       from: 'ideas',
       class: Idea,
       extend: Representers::Idea,

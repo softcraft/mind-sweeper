@@ -49,7 +49,7 @@ describe 'mind sweeper' do
     let(:login_path) { settings.login_path }
 
     before do
-      user.stub(:first_idea)
+      user.stub(:ordered_ideas)
       Idea.stub(:where).and_return(Mongoid::Criteria.new(Idea))
     end
 
@@ -75,7 +75,7 @@ describe 'mind sweeper' do
     let(:user_path) { settings.user_path.gsub(':user', user.id) }
 
     before do
-      user.stub(:first_idea)
+      user.stub(:ordered_ideas)
       Idea.stub(:where).and_return(Mongoid::Criteria.new(Idea))
     end
 

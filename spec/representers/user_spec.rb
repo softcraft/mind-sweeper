@@ -7,7 +7,7 @@ describe Representers::User do
   subject { user.extend(described_class) }
 
   before do
-    user.stub(:first_idea)
+    user.stub(:ordered_ideas)
     Idea.stub(:where).and_return(Mongoid::Criteria.new(Idea))
     subject.to_json
   end
