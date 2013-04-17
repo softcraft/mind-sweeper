@@ -12,6 +12,7 @@ require_relative 'representers/user'
 
 configure do
   enable :cross_origin
+  set :allow_methods, [:get, :post, :options, :put]
 end
 
 config_file 'config/config.yml'
