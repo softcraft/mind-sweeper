@@ -22,6 +22,8 @@ describe 'mind sweeper' do
     let(:user)   { double('user') }
 
     before do
+      user.stub(:id).and_return("id")
+      user.stub(:ordered_ideas).and_return([])
       User.should_receive(:create).with(params.stringify_keys).
         and_return(user)
     end
@@ -98,7 +100,7 @@ describe 'mind sweeper' do
   context 'collect' do
 
     let(:user)   { double('user') }
-    let(:idea)   { double('idea') }
+    let(:idea)   { Idea.new }
     let(:params) { { description: 'new idea' } }
     let(:options) { params.merge(user_id: ':user') }
 

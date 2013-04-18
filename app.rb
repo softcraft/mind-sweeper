@@ -25,7 +25,12 @@ end
 post settings.signup_path do
   user = User.create(params)
 
-  user.save ? 201 : 422
+  if user.save
+    status 201
+    user.extend(Representers::User).to_json
+  else
+    422
+  end
 end
 
 post settings.login_path do
@@ -40,7 +45,12 @@ post settings.collect_path do
   idea = Idea.create(description: params[:description],
                      user_id: params[:user])
 
-  idea.save ? 201 : 422
+  if idea.save
+    status 201
+    idea.extend(Representers::Idea).to_json
+  else
+    422
+  end
 end
 
 put settings.idea_path do
