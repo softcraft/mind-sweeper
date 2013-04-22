@@ -16,9 +16,7 @@ This is a simple service that allows you to:
 
 # Documentation
 
-![Diagram](http://i.imgur.com/cyWTuXA.png)
-
-![Diagram](http://i.imgur.com/wOv09pp.png)
+![Diagram](http://i.imgur.com/u4qYLoM.png)
 
 ## Signup
 
